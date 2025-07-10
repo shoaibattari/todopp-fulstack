@@ -2,7 +2,7 @@ import User from "../../models/userModel.js";
 import bcrypt from "bcryptjs";
 
 export const registerUser = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, userRole } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({
       message: "please provide all fields",
@@ -21,6 +21,7 @@ export const registerUser = async (req, res, next) => {
       name,
       email,
       password,
+      userRole: userRole || "user",
     });
     res.status(200).json({
       message: "User Create Succesfully",

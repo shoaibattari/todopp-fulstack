@@ -13,6 +13,7 @@ export const addTodo = async (req, res) => {
     const newTodo = await TodoModel.create({
       title,
       description,
+      user: req.user.id,
     });
     res.status(200).json({
       message: "Todo Add Succesfully",
@@ -30,7 +31,7 @@ export const addTodo = async (req, res) => {
 
 export const getAllTodo = async (req, res) => {
   try {
-    const allTodos = await TodoModel.find({});
+    const allTodos = await TodoModel.find({ user: req.user.id });
     if (!allTodos) {
       return res.status(400).json({
         message: "Todo Not Found",
@@ -56,7 +57,7 @@ export const getTodo = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(req.params.id);
-    const Todo = await TodoModel.findOne({ _id: id });
+    const Todo = await TodoModel.findOne({ _id: id, user: req.user.id });
     console.log(`single todo byid  ${Todo}`);
     if (!Todo) {
       return res.status(400).json({
@@ -84,7 +85,7 @@ export const editTodo = async (req, res) => {
     const { id } = req.params;
     const { title, description } = req.body;
     console.log(req.params.id);
-    const findTodo = await TodoModel.findOne({ _id: id });
+    const findTodo = await TodoModel.findOne({ _id: id, user: req.user.id });
     if (!findTodo) {
       return res.status(400).json({
         message: "Todo Not Found",
@@ -114,7 +115,7 @@ export const deleteTodo = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(req.params.id);
-    const Todo = await TodoModel.deleteOne({ _id: id });
+    const Todo = await TodoModel.deleteOne({ _id: id, user: req.user.id });
     console.log(`single todo byid  ${Todo}`);
     if (!Todo) {
       return res.status(400).json({
@@ -139,6 +140,31 @@ export const deleteTodo = async (req, res) => {
 
 export const deleteAllTodos = async (req, res) => {
   try {
+    const Todos = await TodoModel.deleteMany({ user: req.user.id });
+    console.log(`delete todos  ${Todos}`);
+    if (!Todos) {
+      return res.status(400).json({
+        message: "Todo Not Found",
+        status: false,
+        data: null,
+      });
+    }
+    res.status(200).json({
+      message: "succesfully todos delete",
+      status: true,
+      data: Todos,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+};
+
+export const adminDeleteAllTodos = async (req, res) => {
+  try {
     const Todos = await TodoModel.deleteMany();
     console.log(`delete todos  ${Todos}`);
     if (!Todos) {
@@ -158,6 +184,25 @@ export const deleteAllTodos = async (req, res) => {
       message: error.message,
       status: false,
       data: null,
+    });
+  }
+};
+
+export const getAllTodosForAdmin = async (req, res) => {
+  try {
+    const todos = await TodoModel.find()
+      .populate("user", "name, email, userRole")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: `Admin: all user todos fetched successfully`,
+      status: true,
+      data: todos,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      status: false,
     });
   }
 };

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const { Schema} = mongoose;
+const { Schema } = mongoose;
 
 const todoSchema = new Schema(
   {
@@ -12,10 +12,14 @@ const todoSchema = new Schema(
       type: String,
       required: [true, "descriptin is required"],
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: [true, "user is required"],
+    },
   },
   { timestamps: true }
 );
 
 const TodoModel = mongoose.model("todo", todoSchema);
 export default TodoModel;
-  
