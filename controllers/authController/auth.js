@@ -124,3 +124,64 @@ export const getAllUsersForAdmin = async (req, res) => {
     });
   }
 };
+
+// export const uploadUserAvatar = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({
+//         message: "Koi file upload nahi hui",
+//         status: false,
+//       });
+//     }
+
+//     const user = await User.findById(req.user.id);
+//     if (!user) {
+//       return res.status(404).json({
+//         message: "User nahi mila",
+//         status: false,
+//       });
+//     }
+
+//     user.avatar = `/uploads/${req.file.filename}`;
+//     await user.save();
+
+//     res.status(200).json({
+//       message: "Image upload hogayi",
+//       status: true,
+//       data: {
+//         avatar: user.avatar,
+//       },
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: error.message,
+//       status: false,
+//     });
+//   }
+// };
+
+export const uploadUserAvatar = async (req, res) => {
+  try {
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: "Image file nahi mila", status: false });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User nahi mila", status: false });
+    }
+
+    user.avatar = req.file.path; // ✅ Cloudinary ka secure URL
+    await user.save();
+
+    res.status(200).json({
+      message: "Image Cloudinary par upload ho gayi",
+      status: true,
+      data: {
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: false });
+  }
+};

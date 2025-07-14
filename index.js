@@ -9,6 +9,8 @@ dotenv.config();
 app.use(cors()); 
 app.use(express.json()); // To parse JSON request bodies
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads")); // ✅ /uploads/images accessible honge
+
 
 connectDB();
 

@@ -13,6 +13,7 @@ const userSchema = new Schema(
     },
     password: { type: String, required: true },
     userRole: { type: String, default: "user" },
+    avatar: { type: String, default: "" },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
@@ -32,9 +33,13 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.getSignedToken = function () {
-  return jwt.sign({ id: this._id, name: this.name, userRole: this.userRole  }, process.env.JWT_SECRET, {
-    expiresIn: "15d",
-  });
+  return jwt.sign(
+    { id: this._id, name: this.name, userRole: this.userRole },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "15d",
+    }
+  );
 };
 
 const user = mongoose.model("user", userSchema);
