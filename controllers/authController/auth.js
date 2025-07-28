@@ -1,3 +1,4 @@
+import cloudinary from "../../config/cloudinary.js";
 import User from "../../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -163,19 +164,33 @@ export const getAllUsersForAdmin = async (req, res) => {
 export const uploadUserAvatar = async (req, res) => {
   try {
     if (!req.file || !req.file.path) {
-      return res.status(400).json({ message: "Image file nahi mila", status: false });
+      return res
+        .status(400)
+        .json({ message: "Image not found", status: false });
     }
 
     const user = await User.findById(req.user.id);
     if (!user) {
-      return res.status(404).json({ message: "User nahi mila", status: false });
+      return res.status(404).json({ message: "User not found", status: false });
     }
 
-    user.avatar = req.file.path; // ✅ Cloudinary ka secure URL
+    if (user.avatar?.publicId) {
+      await cloudinary.uploader.destroy(user.avatar.publicId);
+    }
+    // const result = await cloudinary.uploader.upload(req.file.path, {
+    //   folder: "profileImages",
+    // });
+
+    user.avatar = {
+      url: req.file.path,
+      publicId: req.file.filename,
+    };
+
     await user.save();
 
+    console.log(user, "user");
     res.status(200).json({
-      message: "Image Cloudinary par upload ho gayi",
+      message: "Image Succesfully Upload Cloudinary",
       status: true,
       data: {
         avatar: user.avatar,

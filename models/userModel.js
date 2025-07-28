@@ -13,7 +13,10 @@ const userSchema = new Schema(
     },
     password: { type: String, required: true },
     userRole: { type: String, default: "user" },
-    avatar: { type: String, default: "" },
+    avatar: {
+      url:{ type: String, default: "" },
+      publicId: { type: String, default: "" },
+    },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
