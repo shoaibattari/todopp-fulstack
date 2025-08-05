@@ -1,3 +1,4 @@
+import cloudinary from "../../config/cloudinary.js";
 import TodoModel from "../../models/todoModel.js";
 
 export const addTodo = async (req, res) => {
@@ -10,10 +11,16 @@ export const addTodo = async (req, res) => {
         data: null,
       });
     }
+
+    let avatar = {
+      url: req.file?.path || "",
+      publicId: req.file?.filename || "",
+    };
     const newTodo = await TodoModel.create({
       title,
       description,
       user: req.user.id,
+      avatar,
     });
     res.status(200).json({
       message: "Todo Add Succesfully",
@@ -94,8 +101,20 @@ export const editTodo = async (req, res) => {
       });
     }
     console.log(`single todo byid  ${findTodo}`);
+
+    if (req.file && findTodo.avatar.publicId) {
+      await cloudinary.uploader.destroy(findTodo.avatar.publicId);
+    }
     findTodo.title = title || findTodo.title;
     findTodo.description = description || findTodo.description;
+
+    if (req.file) {
+      findTodo.avatar = {
+        url: req.file.path,
+        publicId: req.file.filename,
+      };
+    }
+
     await findTodo.save();
     res.status(200).json({
       message: "succesfully todo updated",
@@ -206,4 +225,3 @@ export const getAllTodosForAdmin = async (req, res) => {
     });
   }
 };
-

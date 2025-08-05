@@ -12,6 +12,10 @@ const todoSchema = new Schema(
       type: String,
       required: [true, "descriptin is required"],
     },
+    avatar: {
+      url: { type: String, default: "" },
+      publicId: { type: String, default: "" },
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",

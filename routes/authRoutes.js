@@ -17,7 +17,7 @@ router.get("/profile", verifyToken, getUserProfile);
 router.put(
   "/profile/upload-avatar",
   verifyToken,
-  upload.single("avatar"),
+  upload("profileImages").single("avatar"),
   uploadUserAvatar
 );
 
