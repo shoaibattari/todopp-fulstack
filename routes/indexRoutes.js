@@ -1,11 +1,11 @@
 import express from "express";
-import todoRoutes from "./todoRoutes.js";
+import taskifyRoutes from "./taskifyRoutes.js";
 import authRoutes from "./authRoutes.js";
 import adminRoutes from "./adminRoutes.js";
 
 const router = express.Router();
 
-router.use("/todo", todoRoutes);
+router.use("/taskify", taskifyRoutes);
 router.use("/auth", authRoutes);
 router.use("/admin", adminRoutes);
 

@@ -1,38 +1,36 @@
 import express from "express";
 import {
-  adminDeleteAllTodos,
-  getAllTodosForAdmin,
-} from "../controllers/todoController/todo.js";
+  adminDeleteAllTaskify,
+  getAllTaskifyForAdmin,
+} from "../controllers/taskifyController/taskify.js"; // ✅ Updated path and names
 import verifyToken from "../middlewares/verifyToken.js";
 import authorizeRoles from "../middlewares/authorizeRoles.js";
 import { getAllUsersForAdmin } from "../controllers/authController/auth.js";
 
 const router = express.Router();
 
-// adminDeleteAllTodos
+// ✅ Admin: Delete All Taskify
 router.delete(
-  "/deletealltodos",
+  "/delete-all-taskify",
   verifyToken,
   authorizeRoles("admin"),
-  adminDeleteAllTodos
+  adminDeleteAllTaskify
 );
 
-// adminGeteAllTodos
+// ✅ Admin: Get All Taskify
 router.get(
-  "/allTodos",
+  "/all-taskify",
   verifyToken,
   authorizeRoles("admin"),
-  getAllTodosForAdmin
-); // get All Todo For Admin Only
+  getAllTaskifyForAdmin
+);
 
-
-// adminGeteAllTodos
+// ✅ Admin: Get All Users
 router.get(
-  "/allUsers",
+  "/all-users",
   verifyToken,
   authorizeRoles("admin"),
   getAllUsersForAdmin
-); // get All Todo For Admin Only
-
+);
 
 export default router;

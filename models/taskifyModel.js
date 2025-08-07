@@ -1,17 +1,10 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const todoSchema = new Schema(
+const taskifySchema = new Schema(
   {
-    title: {
-      type: String,
-      required: [true, "title is required"],
-      trim: true,
-    },
-    description: {
-      type: String,
-      required: [true, "descriptin is required"],
-    },
+    title: { type: String, required: [true, "title is required"], trim: true },
+    description: { type: String, required: [true, "description is required"] },
     avatar: {
       url: { type: String, default: "" },
       publicId: { type: String, default: "" },
@@ -25,5 +18,5 @@ const todoSchema = new Schema(
   { timestamps: true }
 );
 
-const TodoModel = mongoose.model("todo", todoSchema);
-export default TodoModel;
+const TaskifyModel = mongoose.model("taskify", taskifySchema);
+export default TaskifyModel;
