@@ -214,3 +214,20 @@ export const getAllTaskifyForAdmin = async (req, res) => {
     });
   }
 };
+
+// ✅ Public Controller for Landing Page
+export const getAllTaskifyForLanding = async (req, res) => {
+  try {
+    const taskifyList = await TaskifyModel.find();
+    res.status(200).json({
+      success: true,
+      data: taskifyList,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch taskify for landing page",
+      error: error.message,
+    });
+  }
+};

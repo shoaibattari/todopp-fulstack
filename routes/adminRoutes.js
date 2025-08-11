@@ -2,6 +2,7 @@ import express from "express";
 import {
   adminDeleteAllTaskify,
   getAllTaskifyForAdmin,
+  getAllTaskifyForLanding,
 } from "../controllers/taskifyController/taskify.js"; // ✅ Updated path and names
 import verifyToken from "../middlewares/verifyToken.js";
 import authorizeRoles from "../middlewares/authorizeRoles.js";
@@ -31,6 +32,11 @@ router.get(
   verifyToken,
   authorizeRoles("admin"),
   getAllUsersForAdmin
+);
+
+router.get(
+  "/landing-taskify",
+  getAllTaskifyForLanding //
 );
 
 export default router;

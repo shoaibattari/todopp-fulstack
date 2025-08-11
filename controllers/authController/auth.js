@@ -38,8 +38,8 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const loginUser = async (req, res, next) => {
-  const { email, password, userRole } = req.body;
-  if (!userRole || !email || !password) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).json({
       message: "please provide all fields",
       status: false,
@@ -55,12 +55,12 @@ export const loginUser = async (req, res, next) => {
         status: false,
       });
     }
-    if (user.userRole !== userRole) {
-      return res.status(403).json({
-        message: "No User Role Match",
-        status: false,
-      });
-    }
+    // if (user.userRole !== userRole) {
+    //   return res.status(403).json({
+    //     message: "No User Role Match",
+    //     status: false,
+    //   });
+    // }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
