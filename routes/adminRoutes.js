@@ -3,6 +3,7 @@ import {
   adminDeleteAllTaskify,
   getAllTaskifyForAdmin,
   getAllTaskifyForLanding,
+  getDashboardStats,
 } from "../controllers/taskifyController/taskify.js"; // ✅ Updated path and names
 import verifyToken from "../middlewares/verifyToken.js";
 import authorizeRoles from "../middlewares/authorizeRoles.js";
@@ -37,6 +38,13 @@ router.get(
 router.get(
   "/landing-taskify",
   getAllTaskifyForLanding //
+);
+
+router.get(
+  "/dashboard-stats",
+  verifyToken,
+  authorizeRoles("admin"),
+  getDashboardStats
 );
 
 export default router;

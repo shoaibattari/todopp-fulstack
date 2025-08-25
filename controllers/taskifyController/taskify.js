@@ -1,5 +1,6 @@
 import cloudinary from "../../config/cloudinary.js";
 import TaskifyModel from "../../models/taskifyModel.js";
+import User from "../../models/userModel.js";
 
 // Add Taskify
 export const addTaskify = async (req, res) => {
@@ -229,5 +230,46 @@ export const getAllTaskifyForLanding = async (req, res) => {
       message: "Failed to fetch taskify for landing page",
       error: error.message,
     });
+  }
+};
+
+export const getDashboardStats = async (req, res) => {
+  try {
+    // ✅ Total Users
+    const totalUsers = await User.countDocuments();
+
+    // ✅ Total Taskify
+    const totalTaskify = await TaskifyModel.countDocuments();
+
+    // ✅ Users by Role
+    const usersByRole = await User.aggregate([
+      { $group: { _id: "$userRole", count: { $sum: 1 } } },
+    ]);
+
+    // ✅ Recent Users (last 5)
+    const recentUsers = await User.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("name email userRole createdAt");
+
+    // ✅ Recent Taskify (last 5)
+    const recentTaskify = await TaskifyModel.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("title description status createdAt");
+
+    res.status(200).json({
+      message: "Admin Dashboard Stats",
+      status: true,
+      data: {
+        totalUsers,
+        totalTaskify,
+        usersByRole,
+        recentUsers,
+        recentTaskify,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: false });
   }
 };
