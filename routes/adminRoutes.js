@@ -1,6 +1,8 @@
 import express from "express";
 import {
   adminDeleteAllTaskify,
+  adminEditTaskify,
+  getaAdminTaskify,
   getAllTaskifyForAdmin,
   getAllTaskifyForLanding,
   getDashboardStats,
@@ -8,6 +10,7 @@ import {
 import verifyToken from "../middlewares/verifyToken.js";
 import authorizeRoles from "../middlewares/authorizeRoles.js";
 import { getAllUsersForAdmin } from "../controllers/authController/auth.js";
+import upload from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -45,6 +48,21 @@ router.get(
   verifyToken,
   authorizeRoles("admin"),
   getDashboardStats
+);
+
+router.get(
+  "/taskify/:id",
+  verifyToken,
+  authorizeRoles("admin"),
+  getaAdminTaskify
+);
+
+router.put(
+  "/edit/:id",
+  verifyToken,
+  authorizeRoles("admin"),
+  upload("taskifyAvatars").single("avatar"),
+  adminEditTaskify
 );
 
 export default router;

@@ -233,6 +233,81 @@ export const getAllTaskifyForLanding = async (req, res) => {
   }
 };
 
+// Get Single Taskify
+export const getaAdminTaskify = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const task = await TaskifyModel.findOne({ _id: id });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Taskify not found",
+        status: false,
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      message: "Successfully fetched taskify",
+      status: true,
+      data: task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+};
+
+// admin Edit
+export const adminEditTaskify = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    const task = await TaskifyModel.findOne({ _id: id });
+    console.log("🚀 ~ adminEditTaskify ~ task:", task)
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Taskify not found",
+        status: false,
+        data: null,
+      });
+    }
+
+    if (req.file && task.avatar.publicId) {
+      await cloudinary.uploader.destroy(task.avatar.publicId);
+    }
+
+    task.title = title || task.title;
+    task.description = description || task.description;
+
+    if (req.file) {
+      task.avatar = {
+        url: req.file.path,
+        publicId: req.file.filename,
+      };
+    }
+
+    await task.save();
+
+    res.status(200).json({
+      message: "Taskify updated successfully",
+      status: true,
+      data: task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+};
+
 export const getDashboardStats = async (req, res) => {
   try {
     // ✅ Total Users
