@@ -1,6 +1,7 @@
 import cloudinary from "../../config/cloudinary.js";
 import TaskifyModel from "../../models/taskifyModel.js";
 import User from "../../models/userModel.js";
+import notificationapi from "notificationapi-node-server-sdk";
 
 // Add Taskify
 export const addTaskify = async (req, res) => {
@@ -26,6 +27,16 @@ export const addTaskify = async (req, res) => {
       avatar,
     });
 
+    await notificationapi.send({
+      type: "custom_webpush",
+      to: { id: "admin123" },
+      web_push: {
+        title: "Taskify Added successfully",
+        message: `The task has been added.`,
+        icon: "https://yourdomain.com/icon-192.png",
+        url: "/",
+      },
+    });
     res.status(200).json({
       message: "Taskify added successfully",
       status: true,
@@ -145,6 +156,17 @@ export const deleteTaskify = async (req, res) => {
         data: null,
       });
     }
+
+    await notificationapi.send({
+      type: "custom_webpush",
+      to: { id: "admin123" },
+      web_push: {
+        title: "Taskify deleted successfully",
+        message: `The task  has been deleted.`,
+        icon: "https://yourdomain.com/icon-192.png",
+        url: "/",
+      },
+    });
 
     res.status(200).json({
       message: "Taskify deleted successfully",
