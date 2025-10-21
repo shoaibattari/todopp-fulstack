@@ -96,7 +96,8 @@ export const exportStudentData = async (req, res) => {
     const worksheet = workbook.addWorksheet("Students");
 
     worksheet.columns = [
-      { header: "Full Name", key: "fullName", width: 25 },
+      { header: "Student ID", key: "studentId", width: 25 },
+      { header: "Full Name", key: "fullName", width: 45 },
       { header: "Guardian Name", key: "guardianName", width: 25 },
       { header: "Campus", key: "campus", width: 20 },
       { header: "Course", key: "course", width: 25 },
